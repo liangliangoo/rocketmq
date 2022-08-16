@@ -356,8 +356,10 @@ public class MQClientInstance {
                 Entry<String, MQConsumerInner> entry = it.next();
                 MQConsumerInner impl = entry.getValue();
                 if (impl != null) {
+                    // 订阅列表
                     Set<SubscriptionData> subList = impl.subscriptions();
                     if (subList != null) {
+                        // 通过订阅信息获取topic
                         for (SubscriptionData subData : subList) {
                             topicList.add(subData.getTopic());
                         }
@@ -368,6 +370,7 @@ public class MQClientInstance {
 
         // Producer
         {
+            // 流程成和consumer相同
             Iterator<Entry<String, MQProducerInner>> it = this.producerTable.entrySet().iterator();
             while (it.hasNext()) {
                 Entry<String, MQProducerInner> entry = it.next();
@@ -630,6 +633,7 @@ public class MQClientInstance {
     public boolean updateTopicRouteInfoFromNameServer(final String topic, boolean isDefault,
         DefaultMQProducer defaultMQProducer) {
         try {
+            // lock 保证线程安全
             if (this.lockNamesrv.tryLock(LOCK_TIMEOUT_MILLIS, TimeUnit.MILLISECONDS)) {
                 try {
                     TopicRouteData topicRouteData;
@@ -704,7 +708,10 @@ public class MQClientInstance {
                         log.warn("updateTopicRouteInfoFromNameServer, getTopicRouteInfoFromNameServer return null, Topic: {}. [{}]", topic, this.clientId);
                     }
                 } catch (MQClientException e) {
+                    // 当这个topic 不是broker 内部topic
                     if (!topic.startsWith(MixAll.RETRY_GROUP_TOPIC_PREFIX) && !topic.equals(TopicValidator.AUTO_CREATE_TOPIC_KEY_TOPIC)) {
+                        // 这两天线上总是打印这样的日志信息
+                        // No topic route info in name server for the topic: lucky_bag_topic
                         log.warn("updateTopicRouteInfoFromNameServer Exception", e);
                     }
                 } catch (RemotingException e) {

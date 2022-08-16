@@ -17,19 +17,24 @@
 
 package org.apache.rocketmq.common.protocol.route;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Random;
-
 import org.apache.commons.lang3.StringUtils;
 import org.apache.rocketmq.common.MixAll;
 
+import java.util.*;
+
 public class BrokerData implements Comparable<BrokerData> {
+    // broker.conf  brokerClusterName 配置
     private String cluster;
+    // broker.conf brokerName 配置
     private String brokerName;
+    // broker地址
     private HashMap<Long/* brokerId */, String/* broker address */> brokerAddrs;
+
+    /*
+        一个 cluster 中，不会存在相同的 brokerName（这里指的是 master 节点）。
+        对于主从结构的 broker。 他们之间的 brokerName 是一致的，
+        但是 brokerId 是不一样的。master broker 的 brokerId 默认为 0。slave broker 的 brokerId 为非 0 的数字。
+     */
 
     private final Random random = new Random();
 
