@@ -108,6 +108,8 @@ public class BrokerStartup {
             }
 
             final BrokerConfig brokerConfig = new BrokerConfig();
+            // 配置namesvr 地址
+            brokerConfig.setNamesrvAddr("127.0.0.1:9876");
             final NettyServerConfig nettyServerConfig = new NettyServerConfig();
             final NettyClientConfig nettyClientConfig = new NettyClientConfig();
 
