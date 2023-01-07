@@ -102,6 +102,7 @@ public class ConsumerManager {
 
         // 找到对应的group信息，如果没有就新建
         ConsumerGroupInfo consumerGroupInfo = this.consumerTable.get(group);
+        // 如果之前不存在，则创建一个新的 消费者组信息 类
         if (null == consumerGroupInfo) {
             ConsumerGroupInfo tmp = new ConsumerGroupInfo(group, consumeType, messageModel, consumeFromWhere);
             ConsumerGroupInfo prev = this.consumerTable.putIfAbsent(group, tmp);
