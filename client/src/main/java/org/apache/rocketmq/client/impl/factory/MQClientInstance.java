@@ -59,6 +59,11 @@ import java.util.concurrent.atomic.AtomicLong;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
+/**
+ * MQClientInstance封装了 RocketMQ 网络处理 API，是消息生产者、
+ * 消息消费者与 NameServer、Broker 打交道的网络通道。
+ * 同一个 JVM 中的不同消费者和不同生产者在启动时获取到的 MQClientInstance 实例都是同一个。
+ */
 public class MQClientInstance {
     private final static long LOCK_TIMEOUT_MILLIS = 3000;
     private final InternalLogger log = ClientLogger.getLog();

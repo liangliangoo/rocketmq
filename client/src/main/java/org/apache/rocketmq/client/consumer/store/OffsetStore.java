@@ -16,24 +16,27 @@
  */
 package org.apache.rocketmq.client.consumer.store;
 
-import java.util.Map;
-import java.util.Set;
 import org.apache.rocketmq.client.exception.MQBrokerException;
 import org.apache.rocketmq.client.exception.MQClientException;
 import org.apache.rocketmq.common.message.MessageQueue;
 import org.apache.rocketmq.remoting.exception.RemotingException;
+
+import java.util.Map;
+import java.util.Set;
 
 /**
  * Offset store interface
  */
 public interface OffsetStore {
     /**
+     * 加载消费进度
      * Load
      */
     void load() throws MQClientException;
 
     /**
      * Update the offset,store it in memory
+     * @param increaseOnly 是否在offset基础上递增
      */
     void updateOffset(final MessageQueue mq, final long offset, final boolean increaseOnly);
 
@@ -45,6 +48,10 @@ public interface OffsetStore {
     long readOffset(final MessageQueue mq, final ReadOffsetType type);
 
     /**
+     * 持久化所有队列的消费进度
+     *    1.集群:上报给Broker
+     *    2.广播:写入本地文件
+     *  上报消费进度时，先写入内存，定时任务5秒钟执行一次。
      * Persist all offsets,may be in local storage or remote name server
      */
     void persistAll(final Set<MessageQueue> mqs);
