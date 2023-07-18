@@ -196,10 +196,15 @@ public class DefaultLitePullConsumerImpl implements MQConsumerInner {
             case CREATE_JUST:
                 break;
             case RUNNING:
+                // 1、消费位点的持久化
                 persistConsumerOffset();
+                // 2、nameserver 中销毁注册消费节点
                 this.mQClientFactory.unregisterConsumer(this.defaultLitePullConsumer.getConsumerGroup());
+                // 3、关闭拉消息线程池
                 scheduledThreadPoolExecutor.shutdown();
+                // 4、关闭拉取 msg queue 线程池
                 scheduledExecutorService.shutdown();
+                // 5、关闭消费者和nameserver & broker 之间的通信
                 this.mQClientFactory.shutdown();
                 this.serviceState = ServiceState.SHUTDOWN_ALREADY;
                 log.info("the consumer [{}] shutdown OK", this.defaultLitePullConsumer.getConsumerGroup());
