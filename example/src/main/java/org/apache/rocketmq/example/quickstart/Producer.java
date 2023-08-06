@@ -63,6 +63,7 @@ public class Producer {
                 );
 
                 /*
+                 * rocketmq 投递消息是实时投递的 kafka 是分批投递的，消息的实时性不是很高
                  * Call send message to deliver message to one of brokers.
                  */
                 SendResult sendResult = producer.send(msg);
